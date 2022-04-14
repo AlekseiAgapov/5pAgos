@@ -1,12 +1,21 @@
 #!/usr/bin/bash
 
-# Please insert the number of threads you would like to use.
-num_threads=8
+while getopts p:d: flag
+do
+    case "${flag}" in
+        p) num_threads=${OPTARG};;
+        d) working_directory=${OPTARG};;
+    esac
+done
 
-# First, we create reference sequence files for alignment and visualisation. This script will look for a directory named "reference" and two files in it: "genome.fa" and "plasmid.fa". Attention: the name of the plasmid sequence must be ">plasmid"!
+
+cp -r ../pipeline/ $working_directory
+cd $working_directory
+
+# First, the script will create reference sequence files for alignment and visualisation. This script will look for a directory named "reference" and two files in it: "genome.fa" and "plasmid.fa". Attention: the name of the plasmid sequence must be ">plasmid"! The name of the genome sequence is supposed to start with "NC_".
 # The script will combine the two fasta files in one and then make a bowtie index for it.
 
-cd ../
+
 mkdir ref_tmp
 cp ./reference/* ./ref_tmp/
 cd ./ref_tmp/
@@ -148,5 +157,8 @@ bedtools intersect -a minus_intervals.bed -b ../alignment/minus.bam -wa -wb -F 0
 # Intersect reads mapped to the genome in positive orientation with intervals around chi-sites on negative strand.
 bedtools intersect -a minus_intervals.bed -b ../alignment/plus.bam -wa -wb -F 0.51 > intersected.tsv
 ./normalize_multimappers.py > plus_minus.tsv
+
+cd ../
+rm -r pipeline
 
 echo 'Done!'
