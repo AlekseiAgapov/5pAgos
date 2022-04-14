@@ -1,12 +1,43 @@
 #!/usr/bin/bash
 
-# Please insert the number of threads you would like to use.
-num_threads=8
+# The script takes two arguments:
+#-p is the number of threads to use (number of cores on the machine by default);
+#-d is the path to the working directory that should contain single fq.gz file with reads and the ./reference/ directory with FASTA files.
 
-# First, we create reference sequence files for alignment and visualisation. This script will look for a directory named "reference" and two files in it: "genome.fa" and "plasmid.fa". Attention: the name of the plasmid sequence must be ">plasmid" and the phage must be ">phage".
+num_threads=$(nproc)
+working_directory="directory_that_clearly_could_not_exist_because_if_it_existed_it_wouldnt_be_named_so_weird"
+
+while getopts p:d: flag
+do
+    case "${flag}" in
+        p) num_threads=${OPTARG};;
+        d) working_directory=${OPTARG};;
+    esac
+done
+
+if [ $num_threads -gt 0 ]; then
+	echo "$num_threads threads"
+else 
+	echo "Indicate number of threads! -p argument should be > 0."
+	exit
+fi
+
+
+if [ -d $working_directory ]; then
+	echo "Working directory exists, starting the calculations."
+else 
+	echo "Working directory does not exist! Check -d argument."
+	exit
+fi
+
+
+cp -r ../pipeline/ $working_directory
+cd $working_directory
+
+
+# First, we create reference sequence files for alignment and visualisation. This script will look for a directory named "reference" and two files in it: "genome.fa" and "plasmid.fa". Attention: the name of the genome sequence must be ">genome", the plasmid sequence - ">plasmid", and the phage must be ">phage".
 # The script will combine the three fasta files in one and then make a bowtie index for it.
 
-cd ../
 mkdir ref_tmp
 cp ./reference/* ./ref_tmp/
 cd ./ref_tmp/
@@ -17,9 +48,7 @@ cat phage.fa >> ./ref.fa
 
 bowtie-build --threads $num_threads --quiet ./ref.fa ./ref
 
-echo 'Created multifasta file with the number of DNA molecules:'
-grep '>' ref.fa | wc -l
-echo 'and then built a bowtie index for this reference.'
+echo "Created multifasta file with $(grep '>' ref.fa | wc -l) DNA molecules and then built a bowtie index for this reference."
 cd ../
 
 # Making the fastqc report for the raw data
@@ -77,7 +106,7 @@ samtools fastq -@ $num_threads -F 4 uniq_aligned.sam > selected.fastq # The read
 samtools fastq -@ $num_threads -f 4 uniq_aligned.sam > multimappers.fastq # The reads that were not marked as aligned are multimappers. This command saves these reads in a separate FASTQ file.
 # And then we take multimappers and align them to the reference with -a option (all alignments will be reported).
 bowtie -a --best -strata -v 0 -p $num_threads ../ref_tmp/ref ./multimappers.fastq -S multimappers.sam
-samtools view multimappers.sam | grep -P "\tNC_" | cut -f 1 | sort | uniq > multi_genome.txt # this line saves the names of the reads mapped to the genome sequence in a TXT file
+samtools view multimappers.sam | grep -P "\tgenome" | cut -f 1 | sort | uniq > multi_genome.txt # this line saves the names of the reads mapped to the genome sequence in a TXT file
 samtools view multimappers.sam | grep -P "\tplasmid\t" | cut -f 1 | sort | uniq > multi_plasmid.txt # this line saves the names of the reads mapped to the plasmid sequence in a TXT file
 samtools view multimappers.sam | grep -P "\tphage\t" | cut -f 1 | sort | uniq > multi_phage.txt # this line saves the names of the reads mapped to the phage genome sequence in a TXT file
 rm multimappers.sam
@@ -94,14 +123,14 @@ echo 'The final_sorted.bam was created'
 
 # Calculating alignment statisitcs and preparing files for further analysis
 echo 'Calculating alignment statisitcs'
-bedtools genomecov -d -ibam final_sorted.bam | grep "NC_" | awk '{sum += $3} END {print sum/NR}' > average_cov.txt # calculates average coverage depth of the genome
+bedtools genomecov -d -ibam final_sorted.bam | grep "genome" | awk '{sum += $3} END {print sum/NR}' > average_cov.txt # calculates average coverage depth of the genome
 samtools view final_sorted.bam | cut -f 1 | sort | uniq -c | sed 's/^[ ]*//' | sed 's/ /\t/' > counts.tsv # This line makes a TXT file that contains the information about how many sites each read is mapped to.
 samtools view final_sorted.bam | cut -f 1 | sort | uniq | wc -l > total_reads_aligned.txt # Creates a file with the number of reads mapped to the reference
 cp total_reads_aligned.txt ../coverage_1000/
 cp total_reads_aligned.txt ../coverage_10000/
 cp total_reads_aligned.txt ../chi_metaplot/
 cp total_reads_aligned.txt ../phage_coverage
-samtools view final_sorted.bam | grep -P  '\tNC_' | cut -f 1 | sort | uniq | wc -l > ./aligned_on_genome.txt # Creates a file with the number of reads mapped to the genome
+samtools view final_sorted.bam | grep -P  '\tgenome' | cut -f 1 | sort | uniq | wc -l > ./aligned_on_genome.txt # Creates a file with the number of reads mapped to the genome
 samtools view final_sorted.bam | grep -P  '\tplasmid\t' | cut -f 1 | sort | uniq | wc -l > ./aligned_on_plasmid.txt # Creates a file with the number of reads mapped to the plasmid
 samtools view final_sorted.bam | grep -P  '\tphage\t' | cut -f 1 | sort | uniq | wc -l > ./aligned_on_phage.txt # Creates a file with the number of reads mapped to the phage genome
 # Making BAM files for plus and minus strands
@@ -173,5 +202,8 @@ bedtools intersect -a intervals.bed -b ../alignment/plus.bam -wa -wb -F 0.5 > in
 bedtools intersect -a intervals.bed -b ../alignment/minus.bam -wa -wb -F 0.5 > intersected.tsv
 ./normalize_multimappers.py > normalized.tsv
 ./insert_intervals_after_normalization.py > minus_coverage.tsv
+
+cd ../
+rm -r pipeline
 
 echo 'Done!'

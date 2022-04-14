@@ -12,7 +12,6 @@ import pandas as pd
 
 # read the genome, plasmid, and phage FASTA files, and count their lengths
 genome = pd.read_csv('../reference/genome.fa', sep='\t')
-genome_name = genome.columns[0][1:12]
 genome.columns = ['fasta']
 genome = str(genome['fasta'].sum()).upper()
 genome_length = len(genome)
@@ -62,8 +61,8 @@ def create_bed(interval, dna, dna_name):
     
 
 # Apply the function to create two BED files that split genome into equal intervals of desired length.
-create_bed(1000, genome, genome_name)
-create_bed(10000, genome, genome_name)
+create_bed(1000, genome, 'genome')
+create_bed(10000, genome, 'genome')
 create_bed(1000, phage, 'phage')
 
 print('BED files for whole genome coverage calculation have been created.')
@@ -319,7 +318,7 @@ for coordinate in plus_strand:
     step = 500
     interval_number = 1
     while interval_number <= 40:
-        chr_name.append(genome_name)
+        chr_name.append('genome')
         interval_start.append(coordinate)
         interval_end.append(coordinate + step)
         interval_name.append(interval_number)
@@ -340,7 +339,7 @@ for coordinate in minus_strand:
     step = 500
     interval_number = 1
     while interval_number <= 40:
-        chr_name.append(genome_name)
+        chr_name.append('genome')
         interval_start.append(coordinate)
         interval_end.append(coordinate + step)
         interval_name.append(interval_number)
