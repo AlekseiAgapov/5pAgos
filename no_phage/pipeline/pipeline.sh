@@ -1,5 +1,12 @@
 #!/usr/bin/bash
 
+# The script takes two arguments:
+#-p is the number of threads to use (number of cores on the machine by default);
+#-d is the path to the working directory that should contain single fq.gz file with reads and the ./reference/ directory with FASTA files.
+
+num_threads=$(nproc)
+working_directory="directory_that_clearly_could_not_exist"
+
 while getopts p:d: flag
 do
     case "${flag}" in
@@ -7,6 +14,21 @@ do
         d) working_directory=${OPTARG};;
     esac
 done
+
+if [ $num_threads -gt 0 ]; then
+	echo "$num_threads threads"
+else 
+	echo "Indicate number of threads! -p argument should be > 0."
+	exit
+fi
+
+
+if [ -d $working_directory ]; then
+	echo "Working directory exists, starting the calculations."
+else 
+	echo "Working directory does not exist! Check -d argument."
+	exit
+fi
 
 
 cp -r ../pipeline/ $working_directory
@@ -25,9 +47,7 @@ cat ./plasmid.fa >> ./ref.fa
 
 bowtie-build --threads $num_threads --quiet ./ref.fa ./ref
 
-echo 'Created multifasta file with the number of DNA molecules:'
-grep '>' ref.fa | wc -l
-echo 'and then built a bowtie index for this reference.'
+echo "Created multifasta file with $(grep '>' ref.fa | wc -l) DNA molecules and then built a bowtie index for this reference."
 cd ../
 
 # Making the fastqc report for the raw data
