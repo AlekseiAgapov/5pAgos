@@ -12,7 +12,7 @@ done
 cp -r ../pipeline/ $working_directory
 cd $working_directory
 
-# First, the script will create reference sequence files for alignment and visualisation. This script will look for a directory named "reference" and two files in it: "genome.fa" and "plasmid.fa". Attention: the name of the plasmid sequence must be ">plasmid"! The name of the genome sequence is supposed to start with "NC_".
+# First, the script will create reference sequence files for alignment and visualisation. This script will look for a directory named "reference" and two files in it: "genome.fa" and "plasmid.fa". Attention: the name of the genome sequence must be ">genome" and the plasmid sequence - ">plasmid"!
 # The script will combine the two fasta files in one and then make a bowtie index for it.
 
 
@@ -80,7 +80,7 @@ samtools fastq -@ $num_threads -F 4 uniq_aligned.sam > selected.fastq # The read
 samtools fastq -@ $num_threads -f 4 uniq_aligned.sam > multimappers.fastq # The reads that were not marked as aligned are multimappers. This command saves these reads in a separate FASTQ file.
 # And then we take multimappers and align them to the reference with -a option (all alignments will be reported).
 bowtie -a --best -strata -v 0 -p $num_threads ../ref_tmp/ref ./multimappers.fastq -S multimappers.sam
-samtools view multimappers.sam | grep -P "\tNC_" | cut -f 1 | sort | uniq > multi_genome.txt # this line saves the names of the reads mapped to the genome sequence in a TXT file
+samtools view multimappers.sam | grep -P "\tgenome" | cut -f 1 | sort | uniq > multi_genome.txt # this line saves the names of the reads mapped to the genome sequence in a TXT file
 samtools view multimappers.sam | grep -P "\tplasmid\t" | cut -f 1 | sort | uniq > multi_plasmid.txt # this line saves the names of the reads mapped to the plasmid sequence in a TXT file
 rm multimappers.sam
 ../pipeline/filter_multimappers.py
@@ -96,13 +96,13 @@ echo 'The final_sorted.bam was created'
 
 # Calculating alignment statisitcs and preparing files for further analysis
 echo 'Calculating alignment statisitcs'
-bedtools genomecov -d -ibam final_sorted.bam | grep "NC_" | awk '{sum += $3} END {print sum/NR}' > average_cov.txt # calculates average coverage depth of the genome
+bedtools genomecov -d -ibam final_sorted.bam | grep "genome" | awk '{sum += $3} END {print sum/NR}' > average_cov.txt # calculates average coverage depth of the genome
 samtools view final_sorted.bam | cut -f 1 | sort | uniq -c | sed 's/^[ ]*//' | sed 's/ /\t/' > counts.tsv # This line makes a TXT file that contains the information of how many sites each read is mapped to.
 samtools view final_sorted.bam | cut -f 1 | sort | uniq | wc -l > total_reads_aligned.txt # Creates a file with the number of reads mapped to the reference
 cp total_reads_aligned.txt ../coverage_1000/
 cp total_reads_aligned.txt ../coverage_10000/
 cp total_reads_aligned.txt ../chi_metaplot/
-samtools view final_sorted.bam | grep -P  '\tNC_' | cut -f 1 | sort | uniq | wc -l > ./aligned_on_genome.txt # Creates a file with the number of reads mapped to the genome
+samtools view final_sorted.bam | grep -P  '\tgenome' | cut -f 1 | sort | uniq | wc -l > ./aligned_on_genome.txt # Creates a file with the number of reads mapped to the genome
 samtools view final_sorted.bam | grep -P  '\tplasmid\t' | cut -f 1 | sort | uniq | wc -l > ./aligned_on_plasmid.txt # Creates a file with the number of reads mapped to the plasmid
 # Making BAM files for plus and minus strands
 samtools view -F 16 -b final_sorted.bam > plus.bam

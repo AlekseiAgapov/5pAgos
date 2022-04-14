@@ -12,7 +12,6 @@ import pandas as pd
 
 # read the genome and the plasmid files and count their lengths
 genome = pd.read_csv('../reference/genome.fa', sep='\t')
-genome_name = genome.columns[0][1:12]
 genome.columns = ['fasta']
 genome = str(genome['fasta'].sum()).upper()
 genome_length = len(genome)
@@ -54,8 +53,8 @@ def create_bed(interval, dna, dna_name):
     
 
 # Apply the function to create two BED files that split genome into equal intervals of desired length.
-create_bed(1000, genome, genome_name)
-create_bed(10000, genome, genome_name)
+create_bed(1000, genome, 'genome')
+create_bed(10000, genome, 'genome')
 
 print('BED files for whole genome coverage calculation have been created.')
 
@@ -121,13 +120,13 @@ reads.columns = ['flag', 'chr', 'position', 'sequence']
 reads['length'] = reads.apply(lambda x: len(x['sequence']),axis=1)
 
 # Create tables for each chromosome and orientation. Calculate start position (5') for each read.
-plus_genome = reads.query('flag == 0 and chr != "plasmid"')
+plus_genome = reads.query('flag == 0 and chr == "genome"')
 plus_genome['start_position'] = plus_genome['position']
 
 plus_plasmid = reads.query('flag == 0 and chr == "plasmid"')
 plus_plasmid['start_position'] = plus_plasmid['position']
 
-minus_genome = reads.query('flag == 16 and chr != "plasmid"')
+minus_genome = reads.query('flag == 16 and chr == "genome"')
 minus_genome['start_position'] = minus_genome['position'] + minus_genome['length'] - 1
 
 minus_plasmid = reads.query('flag == 16 and chr == "plasmid"')
@@ -258,7 +257,7 @@ for coordinate in plus_strand:
     step = 500
     interval_number = 1
     while interval_number <= 40:
-        chr_name.append(genome_name)
+        chr_name.append('genome')
         interval_start.append(coordinate)
         interval_end.append(coordinate + step)
         interval_name.append(interval_number)
@@ -279,7 +278,7 @@ for coordinate in minus_strand:
     step = 500
     interval_number = 1
     while interval_number <= 40:
-        chr_name.append(genome_name)
+        chr_name.append('genome')
         interval_start.append(coordinate)
         interval_end.append(coordinate + step)
         interval_name.append(interval_number)
