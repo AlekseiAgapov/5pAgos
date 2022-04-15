@@ -2,7 +2,7 @@
 
 ## What is this project for?
 This is the code that was used for NGS analysis published in paper PAPER_HEADER
-We sequenced small DNA molecules copurified with prokaryotic Argonaute proteins from E. coli cells.
+We sequenced small DNA molecules copurified with prokaryotic Argonaute proteins from *E. coli* cells.
 This script aligns the reads to the reference and prepares data for visualization.
 
 ## How to use it?
