@@ -1,7 +1,7 @@
 # 5pAgos
 
 ## What is this project for?
-This is the code that was used for NGS analysis published in paper PAPER_HEADER
+This is the code that was used for NGS analysis published in paper "Prokaryotic Argonaute nucleases with different patterns of bacterial and bacteriophage DNA targeting" 
 We sequenced small DNA molecules copurified with prokaryotic Argonaute proteins from *E. coli* cells.
 This script aligns the reads to the reference and prepares data for visualization.
 
