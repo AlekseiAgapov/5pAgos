@@ -18,7 +18,7 @@ done
 if [ $num_threads -gt 0 ]; then
 	echo "$num_threads threads"
 else 
-	echo "Indicate number of threads! -p argument should be > 0."
+	echo "-p argument should be > 0."
 	exit
 fi
 
@@ -29,7 +29,6 @@ else
 	echo "Working directory does not exist! Check -d argument."
 	exit
 fi
-
 
 cp -r ../pipeline/ $working_directory
 cd $working_directory
@@ -43,7 +42,6 @@ chmod +x ./pipeline/normalize_multimappers.py
 # First, the script will create reference sequence files for alignment and visualisation. This script will look for a directory named "reference" and two files in it: "genome.fa" and "plasmid.fa". Attention: the name of the genome sequence must be ">genome" and the plasmid sequence - ">plasmid"!
 # The script will combine the two fasta files in one and then make a bowtie index for it.
 
-
 mkdir ref_tmp
 cp ./reference/* ./ref_tmp/
 cd ./ref_tmp/
@@ -55,19 +53,6 @@ bowtie-build --threads $num_threads --quiet ./ref.fa ./ref
 
 echo "Created multifasta file with $(grep '>' ref.fa | wc -l) DNA molecules and then built a bowtie index for this reference."
 cd ../
-
-# Making the fastqc report for the raw data
-mkdir raw_fastqc_report
-fastqc -o raw_fastqc_report *fastq.gz
-
-# Trimming the adapters and filtering out reads that are less than 14 or more than 24 nt long.
-cutadapt -a TGGAATTCTCGGGTGCCAAGG -m 14 -M 24 -o trimmed.fastq *fastq.gz
-
-# Making the fastqc report for the processed data
-mkdir proc_fastqc_report
-fastqc -o proc_fastqc_report trimmed.fastq
-
-echo 'The FASTQ file is ready for alignment. Check FastQC report.'
 
 # Creating folders and copying the necessary files
 mkdir ./logo
@@ -192,5 +177,6 @@ rm *.py
 
 cd ../
 rm -r pipeline
+rm -r ref_tmp
 
 echo 'Done!'

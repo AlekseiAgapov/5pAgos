@@ -30,7 +30,6 @@ else
 	exit
 fi
 
-
 cp -r ../pipeline/ $working_directory
 cd $working_directory
 
@@ -55,19 +54,6 @@ bowtie-build --threads $num_threads --quiet ./ref.fa ./ref
 
 echo "Created multifasta file with $(grep '>' ref.fa | wc -l) DNA molecules and then built a bowtie index for this reference."
 cd ../
-
-# Making the fastqc report for the raw data
-mkdir raw_fastqc_report
-fastqc -o raw_fastqc_report *fastq.gz
-
-# Trimming the adapters and filtering out reads that are less than 14 or more than 24 nt long.
-cutadapt -a TGGAATTCTCGGGTGCCAAGG -m 14 -M 24 -o trimmed.fastq *fastq.gz
-
-# Making the fastqc report for the processed data
-mkdir proc_fastqc_report
-fastqc -o proc_fastqc_report trimmed.fastq
-
-echo 'The FASTQ file is ready for alignment. Check FastQC report.'
 
 # Creating folders and copying the necessary files
 mkdir ./logo
@@ -218,5 +204,6 @@ rm *.py
 
 cd ../
 rm -r pipeline
+rm -r ref_tmp
 
 echo 'Done!'
