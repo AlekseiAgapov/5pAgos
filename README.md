@@ -21,6 +21,7 @@ The result will be following plots:
 This script utilizes some commonly used programs for data analysis and NGS analysis:
 - pandas library for Python https://github.com/pandas-dev/pandas
 - FastQC https://github.com/s-andrews/FastQC
+- cutadapt https://github.com/marcelm/cutadapt
 - bowtie https://github.com/BenLangmead/bowtie
 - samtools https://github.com/samtools/samtools
 - bedtools https://github.com/arq5x/bedtools2
