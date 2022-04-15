@@ -27,3 +27,8 @@ This script utilizes some commonly used programs for data analysis and NGS analy
 - bedtools https://github.com/arq5x/bedtools2
 - ggplot2 library for R https://github.com/tidyverse/ggplot2
 - ggseqlogo library for R https://github.com/omarwagih/ggseqlogo
+ 
+ ## Where to find the data that were processed with this code?
+ The raw sequencing reads are deposited in SRA.
+ - Small DNA reads are in the BioProject PRJNA827032.
+ - Reads for P1 phage genome assembly are in the BioProject .
