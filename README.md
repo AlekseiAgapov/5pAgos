@@ -9,7 +9,7 @@ This script aligns the reads to the reference and prepares data for visualizatio
 ### smDNA analysis
 Script reads_preprocessing.sh starts reads quality control with FastQC, then remove adaptors with cutadapt and makes quality control once again. For input one shoul specify a path to a directory that contains single fq.gz file with reads. Output - directories with FastQC output and trimmed.fastq.gz file with the processed reads. **It is important to check the quality of the processed reads and manually adjust cutadapt arguments if needed.**
 
-This repo contains 2 directories. <no_phage> and <with_phage> contain <pipeline> directory for analysis. Bash script in <pipeline> directory launches the code. The choice depends on whether two (genome and plasmid) or three (genome, plasmid and phage) DNA molecules were present in the cell. The script has two arguments:
+This repo contains 2 directories: <no_phage> and <with_phage>. Bash scripts pipeline.sh and pipeline_phage.sh in them launch the code. The choice depends on whether two (genome and plasmid) or three (genome, plasmid and phage) DNA molecules were present in the cell. The script has two arguments:
  
   **-p** is the number of threads to use for calculations (number of cores on the machine by default);
  
