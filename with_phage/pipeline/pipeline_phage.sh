@@ -2,7 +2,7 @@
 
 # The script takes two arguments:
 #-p is the number of threads to use (number of cores on the machine by default);
-#-d is the path to the working directory that should contain single fq.gz file with reads and the ./reference/ directory with FASTA files.
+#-d is the path to the working directory that should contain trimmed.fastq.gz file with processed read and the ./reference/ directory with FASTA files.
 
 num_threads=$(nproc)
 working_directory="directory_that_clearly_could_not_exist_because_if_it_existed_it_wouldnt_be_named_so_weird"
