@@ -3,9 +3,13 @@
 ## What is this project for?
 This is the code that was used for NGS analysis published in paper "Prokaryotic Argonaute nucleases with different patterns of bacterial and bacteriophage DNA targeting" 
 We sequenced small DNA molecules copurified with prokaryotic Argonaute proteins from *E. coli* cells.
-This script aligns the reads to the reference and prepares data for visualization.
+This repository contains pipeline for phage genome assembly and scripts that align NGS reads to the reference DNA and prepares data for visualization.
 
 ## How to use it?
+
+### Phage genome assembly
+Script description from Vova and Masha.
+
 ### smDNA analysis
 Script reads_preprocessing.sh starts reads quality control with FastQC, then remove adaptors with cutadapt and makes quality control once again. For input one shoul specify a path to a directory that contains single fq.gz file with reads. Output - directories with FastQC output and trimmed.fastq.gz file with the processed reads. **It is important to check the quality of the processed reads and manually adjust cutadapt arguments if needed.**
 
@@ -23,9 +27,6 @@ The result will be following plots:
 - GC-content along the guide length and in surrounding sequences of chromosomal DNA
 - aligned reads length distribution
 
-### Phage genome assembly
-Script description from Vova and Masha.
-
 ## Requirements
 This script utilizes some commonly used programs for data analysis and NGS analysis:
 - pandas library for Python https://github.com/pandas-dev/pandas
@@ -37,7 +38,7 @@ This script utilizes some commonly used programs for data analysis and NGS analy
 - ggplot2 library for R https://github.com/tidyverse/ggplot2
 - ggseqlogo library for R https://github.com/omarwagih/ggseqlogo
 
- ## Where to find the data that were processed with this code?
+ ## Where to find the data that was processed with this code?
  The raw sequencing reads are deposited in SRA.
  - Small DNA reads are in the BioProject PRJNA827032.
  - Reads for P1 phage genome assembly are in the BioProject PRJNA827167.
