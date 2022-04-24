@@ -1,0 +1,12 @@
+#adapter trimming
+cutadapt -m 50 -a AGATCGGAAGAG all_reads.fastq > trimmed.fastq
+	
+#find reads that can't be aligned to the MG1655 genome and plasmid
+bowtie2 -x MG1655_plasmid.fasta -U trimmed.fastq --un P1_reads.fastq -S aligned_plasmid_genome.sam
+
+#genome assembly
+#reads only. Parts of the reference P1 genome are used to fill gaps between contigs
+spades.py --careful -s P1_reads.fastq --untrusted-contigs P1_reference_genome.fasta -o spades_output
+
+#with additional sequences and without reference
+spades.py --careful -s P1_reads.fastq --trusted-contigs sequenced_parts.fa -o spades_output
