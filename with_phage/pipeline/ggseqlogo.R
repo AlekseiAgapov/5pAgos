@@ -6,8 +6,8 @@ logo_v <- as.character(logo[,1])
 
 ggseqlogo(logo_v) +
   ylab("bits") +
-#  scale_y_continuous(breaks = c(0, 0.1, 0.2),
-#                     limits = c(0, 0.3)) +
+  scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4),
+                     limits = c(0, 0.45)) +
   xlab("nucleotide position") +
   scale_x_continuous(breaks = c(5, 10, 15)) +
   theme(text = element_text(size = 50),

@@ -20,7 +20,7 @@ fi
 
 cd $working_directory
 
-file_name=trimmed.fastq
+file_name=trimmed.fastq.gz
 if [ -f $file_name ]; then
 	echo "Trimmed.fastq file already exists. The script must have already been run. Exiting."
 	exit
@@ -33,10 +33,10 @@ mkdir raw_fastqc_report
 fastqc -o raw_fastqc_report *fastq.gz
 
 # Trimming the adapters and filtering out reads that are less than 14 or more than 24 nt long.
-cutadapt -a TGGAATTCTCGGGTGCCAAGG -m 14 -M 24 -o trimmed.fastq *fastq.gz
+cutadapt -a TGGAATTCTCGGGTGCCAAGG -m 14 -M 24 -o trimmed.fastq.gz *fastq.gz
 
 # Making the fastqc report for the processed data
 mkdir proc_fastqc_report
-fastqc -o proc_fastqc_report trimmed.fastq
+fastqc -o proc_fastqc_report trimmed.fastq.gz
 
 echo 'The FASTQ file is ready for alignment. Check FastQC report.'

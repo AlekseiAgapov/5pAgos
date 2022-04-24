@@ -226,7 +226,7 @@ minus_df = pd.DataFrame(minus_strand_chi)
 minus_df.to_csv('../coverage_1000/minus_chi.txt', header=False, index=False, sep='\t')
 
 
-# Select only those chi-sites that are in the interval 2000000-4000000 nt.
+# Select only those chi-sites that are not in the interval 1200000-1700000 nt.
 
 def site_slice(coordinate_list, start, end):
     '''
@@ -235,13 +235,13 @@ def site_slice(coordinate_list, start, end):
     '''
     result_list = []
     for coordinate in coordinate_list:
-        if start < coordinate < end:
+        if (10000 < coordinate < start) or (end < coordinate < genome_length - 10000):
             result_list.append(coordinate)
             
     return result_list
 
-plus_strand = site_slice(plus_strand_chi, 2000000, 4000000)
-minus_strand = site_slice(minus_strand_chi, 2000000, 4000000) 
+plus_strand = site_slice(plus_strand_chi, 1200000, 1700000)
+minus_strand = site_slice(minus_strand_chi, 1200000, 1700000) 
 
 
 # Create BED files with intervals around chi-sites (interval length - 500 nt, number of intervals - 40).
