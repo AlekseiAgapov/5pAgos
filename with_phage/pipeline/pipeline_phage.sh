@@ -86,8 +86,7 @@ cp ./pipeline/insert_intervals_after_normalization.py ./phage_coverage/
 # The following part of the script will launch the series of alignments using different bowtie options. First it alignes all reads to the reference with -k 1 option and filters out unaligned reads.
 echo 'Starting the reads alignment to the reference'
 cd ./alignment/
-bowtie -k 1 -v 0 -p $num_threads ../ref_tmp/ref ../trimmed.fastq -S all_aligned.sam
-gzip ../trimmed.fastq
+bowtie -k 1 -v 0 -p $num_threads ../ref_tmp/ref ../trimmed.fastq.gz -S all_aligned.sam
 samtools fastq -@ $num_threads -F 4 ./all_aligned.sam > ./aligned.fastq # this creates a FASTQ file that contains only the reads that mapped to the reference
 cp aligned.fastq ../logo/
 # Now we align only the reads that are mapped uniquely to the reference (-m 1 option). 

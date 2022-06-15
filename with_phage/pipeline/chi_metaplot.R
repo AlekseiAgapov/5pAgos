@@ -33,55 +33,6 @@ agr_df <- data.frame(interval = agr_plus_plus$interval_name,
 
 ggplot(agr_df, aes(x = interval)) +
   geom_vline(xintercept = 20.5, linetype = "dashed", colour = "black", size = 1) +
-  geom_point(aes(y = agr_plus_plus.RPKM), col = '#FFD500', size = 5) +
-  geom_point(aes(y = agr_minus_plus.RPKM), col = 'grey50', size = 5) +
-  geom_line(aes(y = agr_plus_plus.RPKM), col = '#FFD500', size = 2) +
-  geom_line(aes(y = agr_minus_plus.RPKM), col = 'grey50', size = 2) +
-  ylab("RPKM") +
-  xlab("coordinate relative to Chi-site, kb") +
-  ggtitle("+ strand") +
-  scale_x_continuous(breaks = c(0, 4, 8, 12, 16, 20.5, 24, 28, 32, 36, 40),
-                     labels = c("", -8, "", -4, "", "Chi-site", "", 4, "", 8, "")) +
-  theme(panel.background = element_rect(fill = "white"),
-        axis.line = element_line(size = 1),
-        axis.ticks = element_line(size = 1),
-        axis.ticks.length = unit(0.25, "cm"),
-        axis.text = element_text(size = 40, colour = 'black'),
-        title = element_text(size = 40),
-        plot.title = element_text(hjust = 0.5),
-        panel.grid.major.y = element_line(color = "white",
-                                          linetype = "longdash", 
-                                          size = 0.3))
-
-ggsave("Chi-site_metaplot_plus_strand.png", width = 15, height = 7, dpi = 400)
-
-ggplot(agr_df, aes(x = interval)) +
-  geom_vline(xintercept = 20.5, linetype = "dashed", colour = "black", size = 1) +
-  geom_point(aes(y = agr_minus_minus.RPKM), col = '#FFD500', size = 5) +
-  geom_point(aes(y = agr_plus_minus.RPKM), col = 'grey50', size = 5) +
-  geom_line(aes(y = agr_minus_minus.RPKM), col = '#FFD500', size = 2) +
-  geom_line(aes(y = agr_plus_minus.RPKM), col = 'grey50', size = 2) +
-  ylab("RPKM") +
-  xlab("coordinate relative to Chi-site, kb") +
-  ggtitle("- strand") +
-  scale_x_continuous(breaks = c(0, 4, 8, 12, 16, 20.5, 24, 28, 32, 36, 40),
-                     labels = c("", -8, "", -4, "", "Chi-site", "", 4, "", 8, "")) +
-  theme(panel.background = element_rect(fill = "white"),
-        axis.line = element_line(size = 1),
-        axis.ticks = element_line(size = 1),
-        axis.ticks.length = unit(0.25, "cm"),
-        axis.text = element_text(size = 40, colour = 'black'),
-        title = element_text(size = 40),
-        plot.title = element_text(hjust = 0.5),
-        panel.grid.major.y = element_line(color = "white",
-                                          linetype = "longdash", 
-                                          size = 0.3))
-
-ggsave("Chi-site_metaplot_minus_strand.png", width = 15, height = 7, dpi = 400)
-
-
-ggplot(agr_df, aes(x = interval)) +
-  geom_vline(xintercept = 20.5, linetype = "dashed", colour = "black", size = 1) +
   geom_point(aes(y = right_direction), col = '#FFD500', size = 5) +
   geom_point(aes(y = wrong_direction), col = 'grey50', size = 5) +
   geom_line(aes(y = right_direction), col = '#FFD500', size = 2) +
@@ -102,28 +53,4 @@ ggplot(agr_df, aes(x = interval)) +
                                           linetype = "longdash", 
                                           size = 0.3))
 
-ggsave("Chi-site_metaplot_summary.png", width = 15, height = 7, dpi = 400)
-
-
-ggplot(agr_df, aes(x = interval)) +
-  geom_vline(xintercept = 20.5, linetype = "dashed", colour = "black", size = 1) +
-  geom_point(aes(y = ratio), col = 'grey30', size = 5) +
-  geom_line(aes(y = ratio), col = 'grey30', size = 2) +
-#  scale_y_continuous(breaks = c(0.95, 1, 1.05)) +
-  ylab("RPKM ratio") +
-  xlab("coordinate relative to Chi-site, kb") +
-  ggtitle("") +
-  scale_x_continuous(breaks = c(0, 4, 8, 12, 16, 20.5, 24, 28, 32, 36, 40),
-                     labels = c("", -8, "", -4, "", "Chi-site", "", 4, "", 8, "")) +
-  theme(panel.background = element_rect(fill = "white"),
-        axis.line = element_line(size = 1),
-        axis.ticks = element_line(size = 1),
-        axis.ticks.length = unit(0.25, "cm"),
-        axis.text = element_text(size = 40, colour = 'black'),
-        title = element_text(size = 40),
-        plot.title = element_text(hjust = 0.5),
-        panel.grid.major.y = element_line(color = "white",
-                                          linetype = "longdash", 
-                                          size = 0.3))
-
-ggsave("Chi-site_metaplot_ratio.png", width = 12, height = 7, dpi = 400)
+ggsave("Chi-site_metaplot_summary.png", width = 10, height = 7, dpi = 400)
