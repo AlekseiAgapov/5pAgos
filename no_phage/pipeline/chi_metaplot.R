@@ -32,25 +32,24 @@ agr_df <- data.frame(interval = agr_plus_plus$interval_name,
 
 
 ggplot(agr_df, aes(x = interval)) +
-  geom_vline(xintercept = 20.5, linetype = "dashed", colour = "black", size = 1) +
-  geom_point(aes(y = right_direction), col = '#FFD500', size = 5) +
+#  geom_vline(xintercept = 20.5, linetype = "dashed", colour = "black", size = 1, alpha=1) +
   geom_point(aes(y = wrong_direction), col = 'grey50', size = 5) +
-  geom_line(aes(y = right_direction), col = '#FFD500', size = 2) +
+  geom_point(aes(y = right_direction), col = '#B1602A', size = 5) +
   geom_line(aes(y = wrong_direction), col = 'grey50', size = 2) +
+  geom_line(aes(y = right_direction), col = '#B1602A', size = 2) +
   ylab("RPKM") +
   xlab("coordinate relative to Chi-site, kb") +
-  ggtitle("") +
+  scale_y_continuous(limits = c(83, 103),
+                     breaks = c(84, 90, 96, 102),
+                     labels = c("84", "90", "96", "")) +
   scale_x_continuous(breaks = c(0, 4, 8, 12, 16, 20.5, 24, 28, 32, 36, 40),
-                     labels = c("", -8, "", -4, "", "Chi-site", "", 4, "", 8, "")) +
-  theme(panel.background = element_rect(fill = "white"),
-        axis.line = element_line(size = 1),
-        axis.ticks = element_line(size = 1),
-        axis.ticks.length = unit(0.25, "cm"),
-        axis.text = element_text(size = 40, colour = 'black'),
-        title = element_text(size = 40),
-        plot.title = element_text(hjust = 0.5),
-        panel.grid.major.y = element_line(color = "white",
-                                          linetype = "longdash", 
-                                          size = 0.3))
+                     labels = c("", -8, "", -4, "", "", "", 4, "", 8, "")) +
+  theme(text = element_text(size = 40),
+        panel.background = element_rect(fill = "white"),
+        axis.line = element_line(size = 2),
+        axis.ticks = element_line(size = 1.5),
+        axis.ticks.length = unit(0.3, "cm"),
+        axis.text = element_text(size = 40, colour = 'black'))
 
-ggsave("Chi-site_metaplot_summary.png", width = 10, height = 7, dpi = 400)
+ggsave("Chi-site_metaplot_summary.png", width = 6, height = 7, dpi = 400)
+  

@@ -50,6 +50,7 @@ cat ./genome.fa >> ./ref.fa
 cat ./plasmid.fa >> ./ref.fa
 
 bowtie-build --threads $num_threads --quiet ./ref.fa ./ref
+bowtie-build --threads $num_threads --quiet ./genome.fa ./genome
 
 echo "Created multifasta file with $(grep '>' ref.fa | wc -l) DNA molecules and then built a bowtie index for this reference."
 cd ../
@@ -76,12 +77,24 @@ cp ./pipeline/coverage_10000.R ./coverage_10000/
 cp ./pipeline/normalize_multimappers.py ./coverage_10000/
 cp ./pipeline/insert_intervals_after_normalization.py ./coverage_10000/
 
+mkdir plasmid
+cp ./pipeline/coverage_plasmid.R ./plasmid/
 
-# The following part of the script will launch the series of alignments using different bowtie options. First it alignes all reads to the reference with -k 1 option and filters out unaligned reads.
-echo 'Starting the reads alignment to the reference'
+
+# Align the reads only to genome in order to calculate GC-content.
+echo 'Aligning the reads to the genome only'
 cd ./alignment/
-bowtie -k 1 -v 0 -p $num_threads ../ref_tmp/ref ../trimmed.fastq.gz --al aligned.fastq -S aligned.sam # this creates a FASTQ file that contains only the reads that mapped to the reference
+bowtie -k 1 -v 0 -p $num_threads ../ref_tmp/genome ../trimmed.fastq.gz --al aligned_genome.fastq -S aligned.sam # this creates a FASTQ file that contains only the reads that mapped to the reference
 rm aligned.sam
+# The following part of the script will launch the series of alignments using different bowtie options. First it alignes all reads to the reference with -k 10 option and filters out unaligned reads.
+echo 'Starting the reads alignment to the reference'
+bowtie -k 10 -v 0 -p $num_threads ../ref_tmp/ref ../trimmed.fastq.gz --al aligned.fastq -S aligned.sam # this creates a FASTQ file that contains only the reads that mapped to the reference
+samtools view -b -h aligned.sam | samtools sort -@ $num_threads > all_aligned.bam
+rm aligned.sam
+samtools view all_aligned.bam | cut -f 1 | sort | uniq | wc -l > ../plasmid/total_reads_aligned.txt
+samtools view -F 16 -b all_aligned.bam > ../plasmid/all_aligned_plus.bam
+samtools view -f 16 -b all_aligned.bam > ../plasmid/all_aligned_minus.bam
+rm all_aligned*
 cp aligned.fastq ../logo/
 # Now we align only the reads that are mapped uniquely to the reference (-m 1 option). 
 bowtie -m 1 -v 0 -p $num_threads ../ref_tmp/ref ./aligned.fastq -S uniq_aligned.sam
@@ -120,6 +133,16 @@ python -W ignore ../pipeline/intervals_chi_logo_statistics.py  # Prepares tables
 echo 'Alignment statistics is calculated.'
 rm *.fastq
 rm ../logo/aligned.fastq
+
+echo 'Working on plasmid coverage.'
+cd ../plasmid/
+bedtools genomecov -d -ibam all_aligned_plus.bam | grep "plasmid" > plus_coverage.tsv
+bedtools genomecov -d -ibam all_aligned_minus.bam | grep "plasmid" > minus_coverage.tsv
+python -W ignore ../pipeline/plasmid_coverage.py # Makes TSV file with coverage of plus and minus strand in plasmid
+rm plus_coverage.tsv
+rm minus_coverage.tsv
+rm *bam
+echo 'Plasmid coverage is calculated.'
 
 
 echo 'Calculating coverage in 1000-nt intervals.'

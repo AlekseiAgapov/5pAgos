@@ -81,6 +81,30 @@ with open('../logo/total_genome_GC.txt', 'w') as ouf:
     ouf.write('\n')
 
 
+# Read FASTQ file with the reads aligned to the genomic DNA. Save only reads sequences and calculate their length.
+gen = pd.read_csv('../alignment/aligned_genome.fastq', sep='\t', header=None)
+gen.columns = ['fastq']
+gen = gen.query('(index+3)%4 == 0')
+gen['length'] = gen.apply(lambda x: len(x['fastq']),axis=1)
+
+# Calculate GC-content in all aligned reads mapped to genome.
+def GC_number(seq):
+    '''
+    This function calculates and returns the number of "G" or "C" in the input string.
+    '''
+    GC_number = 0
+    for N in seq:
+        if N == 'C' or N == 'G':
+            GC_number += 1
+    return GC_number
+
+gen['gc'] = gen.apply(lambda x: GC_number(x['fastq']),axis=1)
+
+with open('../logo/genome_reads_GC.txt', 'w') as ouf:
+    ouf.write(str(gen['gc'].sum() / gen['length'].sum() * 100))
+    ouf.write('\n')
+
+
 # Read FASTQ file with the reads aligned to the reference DNA. Save only reads sequences and calculate their length.
 reads = pd.read_csv('../logo/aligned.fastq', sep='\t', header=None)
 reads.columns = ['fastq']
@@ -203,6 +227,7 @@ print('Ready to visualize GC-content.')
 
 # Define chi-sequence.
 chi_sequence = "GCTGGTGG"
+
 
 # Calculate all positions of chi-sequences in the positive strand and save them to TXT file.
 plus_strand_chi = []
