@@ -21,7 +21,7 @@ This repo contains 2 directories: <no_phage> and <with_phage>. Bash scripts pipe
  
 The script will calculate alignments and create a set of directories in the working directory, where R files for plot drawing will be copied. Manual adjusting of parameters (such as axis limits and labels) in R scripts is required.
 The result will be following plots:
-- chromosome and phage genome coverage with small DNA reads
+- chromosome, plasmid and phage coverage with small DNA reads
 - metaplot of small DNA reads coverage of regions around Chi-sites
 - aligned reads logo
 - GC-content along the guide length and in surrounding sequences of chromosomal DNA
