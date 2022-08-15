@@ -1,7 +1,7 @@
 # 5pAgos
 
 ## What is this project for?
-This is the code that was used for NGS analysis published in paper "Prokaryotic Argonaute nucleases with different patterns of bacterial and bacteriophage DNA targeting" 
+This is the code that was used for NGS analysis published in paper "Bacterial Argonaute nucleases with different modes of DNA targeting in vitro and in vivo" 
 We sequenced small DNA molecules copurified with prokaryotic Argonaute proteins from *E. coli* cells.
 This repository contains pipeline for phage genome assembly and scripts that align NGS reads to the reference DNA and prepares data for visualization.
 
@@ -21,7 +21,7 @@ This repo contains 2 directories: <no_phage> and <with_phage>. Bash scripts pipe
  
 The script will calculate alignments and create a set of directories in the working directory, where R files for plot drawing will be copied. Manual adjusting of parameters (such as axis limits and labels) in R scripts is required.
 The result will be following plots:
-- chromosome and phage genome coverage with small DNA reads
+- chromosome, plasmid and phage coverage with small DNA reads
 - metaplot of small DNA reads coverage of regions around Chi-sites
 - aligned reads logo
 - GC-content along the guide length and in surrounding sequences of chromosomal DNA
