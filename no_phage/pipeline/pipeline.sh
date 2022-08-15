@@ -91,7 +91,7 @@ echo 'Starting the reads alignment to the reference'
 bowtie -k 10 -v 0 -p $num_threads ../ref_tmp/ref ../trimmed.fastq.gz --al aligned.fastq -S aligned.sam # this creates a FASTQ file that contains only the reads that mapped to the reference
 samtools view -b -h aligned.sam | samtools sort -@ $num_threads > all_aligned.bam
 rm aligned.sam
-samtools view all_aligned.bam | cut -f 1 | sort | uniq | wc -l > ../plasmid/total_reads_aligned.txt
+samtools view -F 4 all_aligned.bam | cut -f 1 | sort | uniq | wc -l > ../plasmid/total_reads_aligned.txt
 samtools view -F 16 -b all_aligned.bam > ../plasmid/all_aligned_plus.bam
 samtools view -f 16 -b all_aligned.bam > ../plasmid/all_aligned_minus.bam
 rm all_aligned*
