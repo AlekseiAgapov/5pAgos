@@ -3,7 +3,7 @@
 ## What is this project for?
 This is the code that was used for NGS analysis published in paper "Bacterial Argonaute nucleases with different modes of DNA targeting in vitro and in vivo" 
 We sequenced small DNA molecules copurified with prokaryotic Argonaute proteins from *E. coli* cells.
-This repository contains pipeline for phage genome assembly and scripts that align NGS reads to the reference DNA and prepares data for visualization.
+This repository contains pipeline for phage genome assembly and scripts that align NGS reads to the reference DNA and prepare the data for visualization.
 
 ## How to use it?
 
