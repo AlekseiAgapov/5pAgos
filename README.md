@@ -1,7 +1,7 @@
 # 5pAgos
 
 ## What is this project for?
-This is the code that was used for NGS analysis published in paper "Bacterial Argonaute nucleases reveal different modes of DNA targeting in vitro and in vivo" 
+This is the code that was used for NGS analysis published in paper "Bacterial Argonaute nucleases reveal different modes of DNA targeting in vitro and in vivo" in journal Nucleic Acids Research, DOI 10.1093/nar/gkad290.
 We sequenced small DNA molecules copurified with prokaryotic Argonaute proteins from *E. coli* cells.
 This repository contains pipeline for phage genome assembly and scripts that align NGS reads to the reference DNA and prepare the data for visualization.
 
